@@ -1,0 +1,26 @@
+[
+  {
+    "url": "/frame-loop",
+    "name": "Frame Loop"
+  },
+  {
+    "url": "/gsap-basics",
+    "name": "Gsap Basics"
+  },
+  {
+    "url": "/gsap-pin",
+    "name": "Gsap Pin"
+  },
+  {
+    "url": "/gsap-scroll-trigger",
+    "name": "Gsap Scroll Trigger"
+  },
+  {
+    "url": "/gsap-timeline",
+    "name": "Gsap Timeline"
+  },
+  {
+    "url": "/smooth-scroll",
+    "name": "Smooth Scroll"
+  }
+]
