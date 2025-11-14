@@ -5,8 +5,10 @@ import { Orbitron } from "next/font/google";
 import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import { SplitText } from "gsap/all";
+import { GSDevTools } from "gsap/GSDevTools";
 
 gsap.registerPlugin(SplitText);
+gsap.registerPlugin(GSDevTools);
 
 const orbitron = Orbitron({
   subsets: ["latin"],
@@ -98,6 +100,8 @@ function TitleSection() {
         },
         0.4
       );
+
+      GSDevTools.create({ animation: tl });
     },
     {
       scope: containerRef,
