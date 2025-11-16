@@ -1,8 +1,22 @@
 "use client";
 
+import { useGSAP } from "@gsap/react";
+import { useRef } from "react";
+
+import { SplitText } from "gsap/all";
+import gsap from "gsap";
+gsap.registerPlugin(SplitText);
+
 export default function Page() {
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useGSAP(() => {}, { scope: containerRef });
+
   return (
-    <div className="bg-[#E5E5E5] text-[#2A2A2A] flex h-screen items-center justify-center tracking-tighter">
+    <div
+      ref={containerRef}
+      className="bg-[#E5E5E5] text-[#2A2A2A] flex h-screen items-center justify-center tracking-tighter"
+    >
       <h1 className="title font-bold text-[min(20vh,10vw)] flex flex-col gap-[0.2em] leading-none text-left uppercase">
         <span className="relative block right-[1.5em] text-left">GSAP</span>
         <span className="relative block">
