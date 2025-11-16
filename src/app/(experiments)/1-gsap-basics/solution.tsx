@@ -17,6 +17,7 @@ export default function Page() {
       gsap.from(split.chars, {
         autoAlpha: 0,
         y: 200,
+        duration: 0.4,
         stagger: 0.03,
         ease: "circ.out",
       });
