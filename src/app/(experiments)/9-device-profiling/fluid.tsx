@@ -2,7 +2,7 @@
 "use client";
 
 import { useFrame, useThree } from "@react-three/fiber";
-import { useRef, useMemo, useEffect, useState } from "react";
+import { useRef, useMemo, useEffect } from "react";
 import * as THREE from "three";
 
 interface Splat {
@@ -520,7 +520,7 @@ export function useFluid({
   );
 
   // Mouse/touch input handling
-  const [splats, setSplats] = useState<Splat[]>([]);
+  const splatsRef = useRef<Splat[]>([]);
   const lastMouseRef = useRef<{ x: number; y: number; isInit: boolean }>({
     x: 0,
     y: 0,
@@ -557,15 +557,12 @@ export function useFluid({
       lastMouse.y = y;
 
       if (Math.abs(deltaX) || Math.abs(deltaY)) {
-        setSplats((prev) => [
-          ...prev,
-          {
-            x: x / size.width,
-            y: 1 - y / size.height,
-            dx: deltaX * 5,
-            dy: deltaY * -5,
-          },
-        ]);
+        splatsRef.current.push({
+          x: x / size.width,
+          y: 1 - y / size.height,
+          dx: deltaX * 5,
+          dy: deltaY * -5,
+        });
       }
     }
 
@@ -595,10 +592,12 @@ export function useFluid({
 
   // Simulation loop
   useFrame((state, delta) => {
+    // console.log("useFrame");
+
     // if (!displayMeshRef.current) return;
 
-    const currentSplats = [...splats];
-    setSplats([]);
+    const currentSplats = [...splatsRef.current];
+    splatsRef.current = [];
 
     // Render splats
     for (const splat of currentSplats) {
