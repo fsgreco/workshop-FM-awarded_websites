@@ -35,8 +35,8 @@ function Scene() {
   const logo = useTexture("/m-logo.png") as THREE.Texture<HTMLImageElement>;
 
   const { density } = useFluid({
-    densityDissipation: 0.9,
-    curlStrength: 5,
+    densityDissipation: 0.94,
+    curlStrength: 10,
     radius: 0.8,
   });
   const { size } = useThree();
@@ -49,6 +49,7 @@ function Scene() {
       uBackgroundColor: { value: new THREE.Color("black") },
       uForegroundColor: { value: new THREE.Color("#c02e28") },
       uLogoAspect: { value: 1 },
+      uLogoSize: { value: new THREE.Vector2(1, 1) },
       uResolution: { value: new THREE.Vector2(size.width, size.height) },
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -69,6 +70,7 @@ function Scene() {
   useEffect(() => {
     if (logo && logo.image) {
       uniforms.uLogoAspect.value = logo.image.width / logo.image.height;
+      uniforms.uLogoSize.value.set(logo.image.width, logo.image.height);
     }
   }, [logo, uniforms]);
 
@@ -101,6 +103,7 @@ const fragmentShader = /*glsl*/ `
   uniform vec3 uBackgroundColor;
   uniform vec3 uForegroundColor;
   uniform float uLogoAspect;
+  uniform vec2 uLogoSize;
   uniform vec2 uResolution;
   varying vec2 vUv;
 
@@ -111,22 +114,40 @@ const fragmentShader = /*glsl*/ `
     float screenAspect = uResolution.x / uResolution.y;
     float logoAspect = uLogoAspect;
     
-    // Calculate centered, contained logo UV coordinates
-    vec2 logoUV = uv;
-    
+    // Calculate scale to contain the screen
+    float scaleToContain;
     if (screenAspect > logoAspect) {
       // Screen is wider than logo, fit to height
-      // Logo will be centered horizontally
-      float logoWidth = logoAspect / screenAspect;
-      float offset = (1.0 - logoWidth) * 0.5;
-      logoUV.x = (uv.x - offset) / logoWidth;
+      scaleToContain = uResolution.y;
     } else {
       // Screen is taller than logo, fit to width
-      // Logo will be centered vertically
-      float logoHeight = screenAspect / logoAspect;
-      float offset = (1.0 - logoHeight) * 0.5;
-      logoUV.y = (uv.y - offset) / logoHeight;
+      scaleToContain = uResolution.x / logoAspect;
     }
+    
+    // Calculate the resulting pixel size on screen
+    vec2 logoSizeOnScreen = vec2(
+      scaleToContain * logoAspect,
+      scaleToContain
+    );
+    
+    // Clamp scale if it would exceed actual logo pixel size
+    float scaleX = min(1.0, uLogoSize.x / logoSizeOnScreen.x);
+    float scaleY = min(1.0, uLogoSize.y / logoSizeOnScreen.y);
+    float finalScale = min(scaleX, scaleY);
+    
+    // Apply the clamped scale
+    vec2 finalLogoSize = logoSizeOnScreen * finalScale;
+    
+    // Calculate centered logo UV coordinates with clamped size
+    vec2 logoUV = uv;
+    float logoWidth = finalLogoSize.x / uResolution.x;
+    float logoHeight = finalLogoSize.y / uResolution.y;
+    
+    float offsetX = (1.0 - logoWidth) * 0.5;
+    float offsetY = (1.0 - logoHeight) * 0.5;
+    
+    logoUV.x = (uv.x - offsetX) / logoWidth;
+    logoUV.y = (uv.y - offsetY) / logoHeight;
     
     // Sample logo texture
     vec4 logoColor = texture2D(uLogo, logoUV);
