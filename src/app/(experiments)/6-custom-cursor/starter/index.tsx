@@ -1,6 +1,6 @@
 "use client";
 
-import s from "./styles-starter.module.css";
+import s from "./styles.module.css";
 
 export default function Page() {
   return (

@@ -1,6 +1,6 @@
 "use client";
 
-import s from "./styles-solution.module.css";
+import s from "./styles.module.css";
 import {
   PointerEventHandler,
   useCallback,

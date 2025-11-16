@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import s from "./styles-solution.module.css";
+import s from "./styles.module.css";
 import { useEffect, useRef } from "react";
 import { distance } from "@/lib/math";
 

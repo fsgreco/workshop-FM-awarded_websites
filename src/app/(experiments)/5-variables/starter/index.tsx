@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import s from "./styles-starter.module.css";
+import s from "./styles.module.css";
 
 export default function Page() {
   return (
