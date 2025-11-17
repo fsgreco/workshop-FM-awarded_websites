@@ -30,34 +30,6 @@ export default function Page() {
         ease: "circ.out",
       });
 
-      gsap.to("h1", {
-        opacity: 0,
-        scrollTrigger: {
-          trigger: containerRef.current,
-          start: "10% top",
-          toggleActions: "play pause reset reverse",
-        },
-      });
-
-      gsap.to(".cameras", {
-        opacity: 1,
-        scrollTrigger: {
-          trigger: containerRef.current,
-          start: "22% top",
-          end: "35% top",
-          toggleActions: "play reverse play reverse",
-        },
-      });
-
-      gsap.to(".wheels", {
-        opacity: 1,
-        scrollTrigger: {
-          trigger: containerRef.current,
-          start: "95% bottom",
-          toggleActions: "play pause resume reverse",
-        },
-      });
-
       gsap
         .timeline({
           ease: "linear",
@@ -72,11 +44,33 @@ export default function Page() {
           current: 0.4,
           duration: 0.4,
         })
+        .to(
+          "h1",
+          {
+            opacity: 0,
+            duration: 0.1,
+          },
+          "<+0.01"
+        )
+        .to(".cameras", {
+          opacity: 1,
+          repeat: 1,
+          yoyo: true,
+          duration: 0.1,
+          repeatDelay: 0.2,
+        })
         .to(progress, {
-          delay: 0.2,
           duration: 0.8,
           current: 1,
-        });
+        })
+        .to(
+          ".wheels",
+          {
+            opacity: 1,
+            duration: 0.2,
+          },
+          "-=0.2"
+        );
     },
     { scope: containerRef }
   );
@@ -84,11 +78,11 @@ export default function Page() {
   return (
     <div ref={containerRef} className="h-[400vh]">
       <ImageSequence progress={progress} />
-      <section className="h-screen relative w-full overflow-clip">
+      <div className="h-screen relative w-full overflow-clip">
         <h1 className="uppercase fixed text-[8vw] w-full text-center -bottom-[0.1em] leading-none right-[0.05em] tracking-widest text-transparent">
           Perseverance
         </h1>
-        <div className="cameras fixed top-1/2 -translate-y-1/2 right-10 max-w-full w-md text-white opacity-0">
+        <section className="cameras fixed top-1/2 -translate-y-1/2 right-10 max-w-full w-md text-white opacity-0">
           <h2 className="text-6xl mb-2">Cameras</h2>
           <p className="text-balance">
             Mounted on the &quot;head&quot; of the rover&apos;s long-necked
@@ -96,15 +90,15 @@ export default function Page() {
             soils with a camera, laser, and spectrometers to seek chemical
             materials that could be related to past life on Mars.
           </p>
-        </div>
-        <div className="wheels fixed bottom-10 left-16 max-w-full w-md text-white opacity-0">
+        </section>
+        <section className="wheels fixed bottom-10 left-16 max-w-full w-md text-white opacity-0">
           <h2 className="text-6xl mb-2">Wheels</h2>
           <p className="text-balance">
             The wheels are made of aluminium, with cleats for traction and
             curved titanium spokes for springy support.
           </p>
-        </div>
-      </section>
+        </section>
+      </div>
     </div>
   );
 }
