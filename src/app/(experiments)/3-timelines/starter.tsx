@@ -3,14 +3,42 @@
 import { useGSAP } from "@gsap/react";
 import { useRef } from "react";
 
-import { SplitText } from "gsap/all";
+import { GSDevTools, SplitText } from "gsap/all";
 import gsap from "gsap";
 gsap.registerPlugin(SplitText);
+
+gsap.registerPlugin(GSDevTools)
 
 export default function Page() {
   const containerRef = useRef<HTMLDivElement>(null);
 
-  useGSAP(() => {}, { scope: containerRef });
+  useGSAP(() => {
+
+		SplitText.create(".title", {
+			type: 'words, chars',
+			wordsClass: 'word++',
+			charsClass: 'char',
+			mask: 'chars'
+		})
+
+		// we can use timeline instead of inserting a delay inside every animation
+		const timeline = gsap.timeline()
+		
+		// for debugging
+		GSDevTools.create({animation: timeline })
+
+		timeline.from('.word1 .char', { y: '100%', duration: 0.7, ease: 'circ.out', stagger: 0.02 })
+
+		timeline.from('.word2 .char', { x: '-100%', duration: 0.3, ease: 'circ.out', stagger: 0.07 }, "-=0.5s")
+
+		timeline.from('.tl-dot', { opacity: 0, repeat: 6, duration: 0.01, yoyo: true, repeatDelay: 0.2 }, "<")
+		// with "<" you told gsap "start as the previous one (same timing)"
+		timeline.from('.tl-start', { height: 0 }, "<+0.2")
+		timeline.from('.tl-main', { width: 0 }, "<+0.2")
+
+		timeline.from('.word3 .char', { y: '-100%', duration: 0.3, ease: 'circ.out', stagger: 0.07 }, "-=0.5s")
+
+	}, { scope: containerRef });
 
   return (
     <div
