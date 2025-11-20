@@ -1,5 +1,8 @@
 .title {
-  font-variation-settings: 'wght' 200;
+	/* weight should be at least 100 with 900 as limit
+	so since distance oscilates between 0 and 1,
+	if distance is 0 it will be at least 100 */
+  font-variation-settings: 'wght' calc(var(--distance, 0) * 800 + 100);
   letter-spacing: 0em;
 }
 
