@@ -5,10 +5,17 @@ import { useRef } from "react";
 import { SplitText } from "gsap/all";
 import gsap from "gsap";
 
+import { useControls } from "leva";
+
 gsap.registerPlugin(SplitText);
 
 export function TitleSection() {
   const containerRef = useRef<HTMLDivElement>(null);
+
+	const controls = useControls({
+		stagger: { value: 0.1, min: 0, max: 1, step: 0.1 }
+	})
+
   useGSAP(
     () => {
       SplitText.create("h1", {
@@ -19,11 +26,15 @@ export function TitleSection() {
 
       gsap.from("h1 .word", {
         y: "100%",
-        stagger: 0.1,
+        stagger: controls.stagger,
         ease: "circ.inOut",
       });
     },
-    { scope: containerRef }
+    { 
+			scope: containerRef, 
+			dependencies: [controls], 
+			revertOnUpdate: true, // this tells to revert any animation when controls changes 
+		}
   );
   return (
     <div
