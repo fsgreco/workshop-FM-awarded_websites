@@ -5,8 +5,24 @@ import s from "./styles.module.css";
 import { useMouseDistance } from "../utils/use-mouse-distance-hook";
 
 
-export default function Page() {
+const DynamicTitle = () => {
 	const distance = useMouseDistance()
+
+	return (
+      <h1
+        style={{ "--distance": distance } as React.CSSProperties}
+        className={cn(
+          "uppercase text-[10vh] leading-none relative",
+          s["title"]
+        )}
+      >
+        Variables
+      </h1>
+  );
+}
+
+
+export default function Page() {
 
   return (
     <div
@@ -15,15 +31,11 @@ export default function Page() {
         s.grid
       )}
     >
-      <h1
-				style={{'--distance': distance} as React.CSSProperties}
-        className={cn(
-          "uppercase text-[10vh] leading-none relative",
-          s["title"]
-        )}
-      >
-        Variables
-      </h1>
+        <script
+          crossOrigin="anonymous"
+          src="//unpkg.com/react-scan/dist/auto.global.js"
+        />
+			<DynamicTitle />
     </div>
   );
 }
