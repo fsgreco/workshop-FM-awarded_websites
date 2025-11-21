@@ -1,15 +1,15 @@
 .cursor {
   top: 0;
   left: 0;
-  --w: 50px;
-  --h: 50px;
+  --w: 50;
+  --h: 50;
   --x: 0;
   --y: 0;
   transform: translate3D(calc((1px * var(--x,0)) - 50%), calc((1px * var(--y)) - 50%), 0);
   transform-origin: center;
   
-  width: var(--w);
-  height: var(--h);
+  width: calc(1px * var(--w));
+  height: calc(1px * var(--h));
 
   transition: width 0.2s, height 0.2s;
 
